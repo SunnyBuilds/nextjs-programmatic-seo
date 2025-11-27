@@ -6,7 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Restaurant } from "@/data/restaurants";
+import { Restaurant } from "@/lib/db";
+import { getRandomImage } from "@/lib/images";
 import { Clock, MapPin, Phone, Star, StarHalf } from "lucide-react";
 import Image from "next/image";
 
@@ -15,15 +16,22 @@ interface RestaurantItemProps {
 }
 
 export default function RestaurantItem({ restaurant }: RestaurantItemProps) {
+  // Always use the random local image logic as per instruction to "permanently disable fragile real images"
+  // This ensures high performance and stability with local WebP assets.
+  const displayImage = getRandomImage(restaurant.cuisine || restaurant.name || "default");
+
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-      <Image
-        src={restaurant.image}
-        alt={restaurant.name}
-        width={800}
-        height={500}
-        className="h-48 w-full object-cover"
-      />
+      <div className="relative h-48 w-full">
+        <Image
+          src={displayImage}
+          alt={restaurant.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={false}
+        />
+      </div>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>

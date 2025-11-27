@@ -1,11 +1,15 @@
 import banner from "@/assets/restaurant-banner.jpg";
 import Header from "@/components/Header";
+import { getLocations, getTerms } from "@/lib/db";
 import Image from "next/image";
 
-export default async function Home() {
+export default function Home() {
+  const locations = getLocations();
+  const terms = getTerms();
+
   return (
     <div>
-      <Header />
+      <Header locations={locations} terms={terms} />
       <main className="container mx-auto space-y-8 px-4 py-8">
         <div className="relative h-96 w-full">
           <Image

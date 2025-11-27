@@ -1,8 +1,7 @@
 "use client";
 
-import LocationInput from "@/components/LocationInput";
+import SearchableSelect from "@/components/SearchableSelect";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,9 +9,16 @@ import { useRouter } from "next/navigation";
 interface HeaderProps {
   q?: string;
   location?: string;
+  locations?: string[];
+  terms?: string[];
 }
 
-export default function Header({ q, location }: HeaderProps) {
+export default function Header({
+  q,
+  location,
+  locations = [],
+  terms = [],
+}: HeaderProps) {
   const router = useRouter();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -21,7 +27,7 @@ export default function Header({ q, location }: HeaderProps) {
     const q = formData.get("q") as string;
     const location = formData.get("location") as string;
     const newSearchParams = new URLSearchParams();
-    newSearchParams.set("q", q);
+    if (q) newSearchParams.set("q", q);
     if (location) newSearchParams.set("location", location);
     router.push(`/search?${newSearchParams.toString()}`);
   }
@@ -41,16 +47,26 @@ export default function Header({ q, location }: HeaderProps) {
             className="flex w-full max-w-2xl flex-wrap gap-2 sm:flex-nowrap"
             key={`${q}-${location}`}
           >
-            <Input
-              name="q"
-              placeholder="Search restaurants..."
-              defaultValue={q}
-              type="search"
-              required
-            />
-            <LocationInput name="location" defaultValue={location} />
-            <Button variant="secondary">
-              <Search className="size-4" />
+            <div className="w-full sm:w-auto flex-1">
+              <SearchableSelect
+                name="q"
+                placeholder="Search cuisine..."
+                defaultValue={q}
+                options={terms}
+                emptyMessage="No cuisine found."
+              />
+            </div>
+            <div className="w-full sm:w-auto flex-none">
+              <SearchableSelect
+                name="location"
+                placeholder="Select location..."
+                defaultValue={location}
+                options={locations}
+                emptyMessage="No location found."
+              />
+            </div>
+            <Button variant="secondary" className="w-full sm:w-auto">
+              <Search className="size-4 mr-2" />
               Search
             </Button>
           </form>
