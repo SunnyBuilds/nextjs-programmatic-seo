@@ -32,8 +32,6 @@ export async function generateMetadata({
   const qDecoded = decodeURIComponent(q);
   const locationDecoded = decodeURIComponent(location);
 
-  const results = await getRestaurants(locationDecoded, qDecoded);
-
   return {
     title: `Top ${qDecoded} near ${locationDecoded} - Updated ${new Date().getFullYear()}`,
     description: `Find the best ${qDecoded} near ${locationDecoded}`,
